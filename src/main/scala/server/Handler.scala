@@ -5,7 +5,7 @@ import java.net.InetSocketAddress
 import akka.actor.{Actor, ActorLogging, ActorRef, Props}
 import akka.io.Tcp
 import akka.util.ByteString
-
+import scala.concurrent.duration._
 import scala.collection.mutable.Queue
 
 object Handler{
@@ -31,6 +31,15 @@ class Handler(connection: ActorRef, remote: InetSocketAddress) extends Actor wit
   context watch connection
 
   case object Ack extends Event
+
+  import context.dispatcher
+
+  context.system.scheduler.scheduleOnce(5 seconds, connection, Write(ByteString("jea"), Ack))
+  context.system.scheduler.scheduleOnce(6 seconds, connection, Write(ByteString("jea"), Ack))
+  context.system.scheduler.scheduleOnce(7 seconds, connection, Write(ByteString("jea"), Ack))
+  context.system.scheduler.scheduleOnce(8 seconds, connection, Write(ByteString("jea"), Ack))
+  context.system.scheduler.scheduleOnce(3 seconds, connection, Close)
+
 
   def receive = {
     case Received(data) =>

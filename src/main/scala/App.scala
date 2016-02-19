@@ -1,7 +1,8 @@
-import akka.actor.ActorSystem
+import akka.actor.{Props, ActorSystem}
+import server.Server
 
 object App extends App {
   implicit val actorSystem = ActorSystem("EchoServer")
 
-  actorSystem.actorOf(TcpServer.props("0.0.0.0", 2020, EchoService.props))
+  actorSystem.actorOf(Props(new Server()))
 }
